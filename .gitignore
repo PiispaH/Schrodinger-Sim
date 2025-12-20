@@ -1,0 +1,9 @@
+.*
+!.gitignore
+
+*.o
+
+*.ppm
+
+bin/*
+!bin/placeholder.txt

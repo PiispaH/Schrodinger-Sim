@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+make && rm -f data/*.ppm && ./bin/schrodinger-sim
+
+ffmpeg -i data/output-%04d.ppm -r 60 animation.mp4
+ffplay -loop 0 animation.mp4
+
+rm animation.mp4
