@@ -4,6 +4,9 @@
 *.o
 
 *.ppm
+*.mp4
 
 bin/*
 !bin/placeholder.txt
+
+src/scratch.c

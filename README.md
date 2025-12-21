@@ -17,16 +17,21 @@ $$
 ### Solver
 
 The Schrödinger equation can be written in the form:
-$$\begin{align}
-\frac{\partial}{\partial t}\Psi(x, t)&=\frac{i\hbar}{2m}\frac{\partial^2}{\partial x^2}\Psi(x, t)-\frac{i}{\hbar}V(x)\Psi(x, t) \\
-&=F(\Psi, \partial_x^2\Psi, x, t).
-\end{align}$$
+$$
+\frac{\partial}{\partial t}\Psi(x, t)=\frac{i\hbar}{2m}\frac{\partial^2}{\partial x^2}\Psi(x, t)-\frac{i}{\hbar}V(x)\Psi(x, t)=F(\Psi, \partial_x^2\Psi, x, t).
+$$
 
 Crank-Nicolson is used to compute the time-evolution of the wavefunction:
 $$
 \frac{\Psi_i^{n+1}-\Psi_i^{n}}{\Delta t}=\frac{1}{2}\left(F_i^{n+1}+F_i^{n}\right),
 $$
-where the shorthand notation $\Psi_i^n=\Psi(i\Delta x, n\Delta t)$ is used, and the.
+where the shorthand notation $\Psi_i^n=\Psi(i\Delta x, n\Delta t)$ is used, the notation $F_i^n$ follows the same logic.
+
+The value of the laplacian $\partial_x^2\Psi_i^n$ can be approximated. The approximation is made by summing the Taylor series
+for $\Psi_{i-1}^n$ and $\Psi_{i+1}^n$ around $x$, and discarding terms $\mathcal{O}(\Delta x^4)$. This leads to the approximation
+$$
+\partial_x^2\Psi_i^n\approx\frac{\Psi_{i-1}^n-2\Psi_i^n+\Psi_{i+1}^n}{\Delta x^2}.
+$$
 
 ## Usage
 

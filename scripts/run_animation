@@ -2,9 +2,9 @@
 
 set -e
 
-make && rm -f data/*.ppm && ./bin/schrodinger-sim
+make
+./bin/schrodinger-sim
 
+rm -f animation.mp4
 ffmpeg -i data/output-%04d.ppm -r 60 animation.mp4
 ffplay -loop 0 animation.mp4
-
-rm animation.mp4

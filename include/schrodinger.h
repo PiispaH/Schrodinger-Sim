@@ -1,6 +1,8 @@
-#ifndef JOKU_H
-#define JOKU_H
+#ifndef SCHRODINGER_H
+#define SCHRODINGER_H
 
-double* schrodinger(int size_x, double t, double duration);
+#include "simulation.h"
+
+double* schrodinger(Simulation *simulation);
 
 #endif

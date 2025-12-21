@@ -8,12 +8,12 @@ INC_DIR   := include
 TEST_DIR  := tests
 
 
-SRCS      := $(wildcard $(SRC_DIR)/*.c)
+SRCS      := $(filter-out $(SRC_DIR)/scratch.c, $(wildcard $(SRC_DIR)/*.c))
 OBJS      := $(SRCS:.c=.o)
 TEST_SRCS := $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJS := $(TEST_SRCS:.c=.o)
 CC        ?= cc
-CFLAGS    := -std=c99 -Wall -Wextra -I$(INC_DIR) -O2
+CFLAGS    := -std=c99 -Wall -Wextra -Werror -I$(INC_DIR) -O2
 LDLIBS    := -lm
 
 
@@ -39,6 +39,10 @@ uninstall:
 
 clean-images:
 	rm -f data/*.ppm
+	rm -f animation.mp4
 
 clean: clean-images
-	rm -f $(OBJS) $(TEST_OBJS) $(BIN_DIR)/$(BIN) $(BIN_DIR)/test_runner
+	rm -f $(OBJS) $(TEST_OBJS) $(BIN_DIR)/$(BIN) $(BIN_DIR)/scratch $(BIN_DIR)/test_runner
+
+scratch:
+	$(CC) $(CFLAGS) $(SRC_DIR)/scratch.c -o $(BIN_DIR)/scratch $(LDLIBS)
