@@ -46,3 +46,4 @@ clean: clean-images
 
 scratch:
 	$(CC) $(CFLAGS) $(SRC_DIR)/scratch.c -o $(BIN_DIR)/scratch $(LDLIBS)
+	$(BIN_DIR)/scratch

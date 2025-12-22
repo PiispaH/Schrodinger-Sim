@@ -3,74 +3,88 @@
 #include <math.h>
 #include <complex.h>
 #include "schrodinger.h"
+#include "utils.h"
 #include "window.h"
 #include "simulation.h"
 
 
-double* painter(Window *window, Simulation *simulation) {
+double* format_array(Window *window, Simulation *simulation, double_c *wavefunction) {
+    // Calculate the probability amplitudes
+    int multiplier = window->width / simulation->n_points_x;
+    
     double *arr = malloc(window->width * sizeof(double));
-
-    double *grid_x = schrodinger(simulation);
-
-    int multiplier = window->width / simulation->size_x;
-
-    // printf("%d\n", multiplier);
     for (int i = 0; i < window->width; i++) {
-        // printf("%f\n", grid_x[i / multiplier]);
-        arr[i] = grid_x[i / multiplier] * window->height / 6;
-        // Here interpolation to some degree is probably needed...
+        arr[i] = pow(cabs(wavefunction[i / multiplier]), 2.0) * window->height / 2;
     }
     return arr;
 }
 
-int main() {
+void painter(double *arr, FILE *pf, Window *window) {
+    for (int y = 0; y < window->height; y++) {
+        for (int x = 0; x < window->width; x++) {
+            // Paint under the value at point x
+            if (arr[x] > window->height - y) fputc(255, pf);
+            else fputc(0, pf);
 
+            fputc(0, pf); 
+            fputc(0, pf); 
+        }
+    }
+}
+
+void render_frame(Window *window, Simulation *simulation, double_c *wavefunction, int frame) {
+    char buffer[256];
+    snprintf(buffer, sizeof(buffer), "data/output-%04d.ppm", frame);
+    const char *output_path = buffer;
+    
+    FILE *pf = fopen(output_path, "wb");
+
+    // Insert the metadata for the fileformat
+    fprintf(pf, "P6\n");
+    fprintf(pf, "%d %d\n", window->width, window->height);
+    fprintf(pf, "255\n");
+    
+    double *arr = format_array(window, simulation, wavefunction);
+    
+    // Paint the actual pixel values for the frame
+    painter(arr, pf, window);
+    
+    fclose(pf);
+
+}
+
+void run(Window *window, Simulation *simulation) {
+
+    double_c *wavefunction = init_wavefunction(simulation);
+
+    render_frame(window, simulation, wavefunction, 0);
+
+    for (int i = 1; i <= simulation->steps; i++) {
+        simulation->t += simulation->dt;
+        crank_nicolson_step(simulation, wavefunction);
+
+        render_frame(window, simulation, wavefunction, i);
+    
+    }
+}
+
+int main() {
     Window window = {
         .width = 16 * 60,
         .height = 9 * 60
     };
-
+    
+    // Outputs 60fps video, so (duration * steps / 60) gives the length of the output video.
     Simulation simulation = {
-        .duration = 5.0,
-        .size_x = 100,
-        .steps = 60,
-        .dt = 5.0 / 60.0,
+        .duration = 1.0,
+        .n_points_x = window.width / 2,
+        .width_x = 10.0,
+        .steps = 240,
         .t = 0.0
     };
-
-    char buffer[256];
-    for (int i = 0; i < simulation.steps; i++) {
-        snprintf(buffer, sizeof(buffer), "data/output-%04d.ppm", i);
-        const char *output_path = buffer;
-
-        simulation.t += simulation.dt;
-
-        FILE *pf = fopen(output_path, "wb");
-
-        // Insert the metadata for the fileformat
-        fprintf(pf, "P6\n");
-        fprintf(pf, "%d %d\n", window.width, window.height);
-        fprintf(pf, "255\n");
-
-        double *arr = painter(&window, &simulation);
-
-        // The actual pixel values
-        for (int y = 0; y < window.height; y++) {
-            for (int x = 0; x < window.width; x++) {
-                // paint(pf, x, y, n * dt); 
-                // if (((x + i) / 10 + (y + i) / 10) % 5 == 0) fputc(255, pf); 
-
-                // Paint under the value at point x
-                if (arr[x] > window.height - y) fputc(255, pf);
-                else fputc(0, pf);
-
-                fputc(0, pf); 
-                fputc(0, pf); 
-            }
-        }
-
-        fclose(pf);
-    }
+    simulation.dx = 2.0 * simulation.width_x / simulation.n_points_x;
+    simulation.dt = simulation.duration / simulation.steps;
+    run(&window, &simulation);
 
     return 0;
 }
