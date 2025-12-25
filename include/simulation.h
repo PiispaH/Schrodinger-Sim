@@ -3,9 +3,10 @@
 
 typedef struct {
     const int n_points_x;
-    const int steps;
     const double width_x;
+    const double visible_x;
     const double duration;
+    int steps;
     double dx;
     double dt;
     double t;
