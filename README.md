@@ -1,5 +1,10 @@
 # Simulator for the Schrödinger equation
 
+
+<p align="center">
+  <img alt="Spine Toolbox" src="wavefunction.png" width="50%">
+</p>
+
 ### Physics
 The simulator solves the time-evolution of the given initial wavefunction according to the Schrödinger equation:
 
