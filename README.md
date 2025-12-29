@@ -21,7 +21,7 @@ The initial state is a normalised Gaussian wavepacket in the position representa
     <img alt="Initial wavefunction" src="./img/initial_wavefunction.svg" width="50%">
   </picture>
 </p>
-where $\Delta x$ is the variance of the position.
+where $`\Delta x`$ is the variance of the position.
 
 The dynamics of the wavepacket are simulated in an infinite potential well.
 
