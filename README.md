@@ -21,13 +21,15 @@ The initial state is a normalised Gaussian wavepacket in the position representa
     <img alt="Initial wavefunction" src="./img/initial_wavefunction.svg" width="50%">
   </picture>
 </p>
-where $`\Delta x`$ is the variance of the position.
+where $\Delta{x}$ is the variance of the position.
+
+
 
 The dynamics of the wavepacket are simulated in an infinite potential well.
 
 ### Solver
 
-The Crank-Nicolson method is used to solve the Schrödinger equation numerically. More information about the mathematics behind the discretisation and solving of the equation are provided in the file `crank_nicolson.pdf`.
+The Crank-Nicolson method is used to solve the Schrödinger equation numerically. More information about the mathematics behind the discretisation and solving of the equation are provided in the file `crank_nicolson.pdf`. The colors in the simulation represents the phase of the wavefunction at that given point.
 
 ## Usage
 The project was developed on and for Ubuntu, so it might not work on other systems. In a Bash terminal, running running the command:
